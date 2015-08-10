@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="source\keyboard.cpp" />
+    <ClCompile Include="source\script.cpp" />
+    <ClCompile Include="source\xscScript.cpp" />
+    <ClCompile Include="source\Main.cpp" />
+    <ClCompile Include="source\NativeTranslation.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\keyboard.h" />
+    <ClInclude Include="source\script.h" />
+    <ClInclude Include="source\xscScript.h" />
+    <ClInclude Include="source\NativeTranslation.h" />
+  </ItemGroup>
+</Project>
