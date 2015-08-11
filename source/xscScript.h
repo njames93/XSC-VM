@@ -44,11 +44,13 @@ public:
 	std::string ExitReason;
 	int maxcodesize;
 private:
+	void BreakPoint(bool pause_execution);
 	PUINT64 _stackPointer;
 	PUINT64 _stack;
 	PUINT64 _locals;
 	unsigned char* buffer1;
 	unsigned char* buffer2;
+	unsigned char* debuglist;
 	unsigned char* _strings;
 	unsigned char* _codeTable;
 	int _codeTableIndex;

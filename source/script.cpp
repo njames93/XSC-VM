@@ -17,10 +17,20 @@ void Log(std::string Message)
 	Log << Message + "\n";
 	Log.close();
 }
+#if !NDEBUG
+void fastlog(char *val)
+{
+	_fastLog.write(val, 4);
+}
+#endif
 
 void ResetLog()
 {
 	remove("XSCVM.log");
+#if !NDEBUG
+	remove("XSCVM_fast.log");
+	_fastLog.open("XSCVM_fast.log", std::ios::out | std::ios::binary | std::ios::ate);
+#endif
 }
 
 void main()
