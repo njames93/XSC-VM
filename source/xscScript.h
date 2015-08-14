@@ -5,15 +5,21 @@
 #include <string.h>
 #include "keyboard.h"
 #include <map>
+#include <vector>
 
-class xscHeader
+
+class script
 {
 public:
-	xscHeader(std::ifstream& file);
+	script(std::string file, std::string Name);
+	script();
+	~script();
+	bool Load();
+	void Unload();
 	bool fillNative(PUINT64 Target);
 	void fillCode(unsigned char *Target);
 	void fillStrings(unsigned char*Target);
-	void fillStatics(PUINT64 Taget);
+	void fillLocals(PUINT64 Taget);
 	UINT readuint(int position);
 	UINT readuintptr(int position);
 	int codeSize;
@@ -24,40 +30,66 @@ public:
 	int staticOff;
 	int stringsOff;
 	int nativeOff;
-private:
 
+
+	std::string ExitReason;
+
+	bool isLoaded = false;
+	PUINT64 _locals;
+
+	unsigned char* _strings;
+	unsigned char* _codeTable;
+
+	PUINT64 NativeHashes;
+	std::string _Name;
+	int instances = 0;
+	bool markedForUnload;
+private:
 
 	int rsc7Off;
-	std::ifstream& _file;
 	unsigned char* buffer;
+
+
+
+	std::ifstream _file;
+	std::string _filename;
 };
 
-class xscScript
+class runningScript
 {
 public:
-	xscScript(std::string file, std::string Name);
-	~xscScript();
+	runningScript(script& Base);
+	runningScript();
+	runningScript(runningScript& other);
+	~runningScript();
 	bool isRunning;
 	void Terminate();
-	bool OnTick();
+	bool Run();
 	void IntToString(int value, unsigned char* ptr);
 	std::string ExitReason;
-	int maxcodesize;
 private:
+#if !NDEBUG
+	char* logbyte = new char[4];
+#endif
+	PUINT64 _locals;
 	void BreakPoint(bool pause_execution);
 	PUINT64 _stackPointer;
 	PUINT64 _stack;
-	PUINT64 _locals;
 	unsigned char* buffer1;
 	unsigned char* buffer2;
 	unsigned char* debuglist;
-	unsigned char* _strings;
-	unsigned char* _codeTable;
 	int _codeTableIndex;
 	DWORD waituntil;
 	PUINT64 _framePointer;
-	PUINT64 NativeHashes;
-	std::string _Name;
-	
+	script& _base;
 };
 
+class runningScripts
+{
+public:
+	~runningScripts();
+	void Run();
+	void StartNewScript(script& Script);
+	std::vector<runningScript> scripts;
+private:
+};

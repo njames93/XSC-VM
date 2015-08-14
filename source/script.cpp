@@ -36,30 +36,40 @@ void ResetLog()
 void main()
 {
 	ResetLog();
-	xscScript Script = xscScript("main.xsc", "Main");
-	if (!Script.isRunning)
+	script Script("main.xsc", "Main");
+	runningScripts ActiveScripts;
+	if (Script.Load())
+	{
+		ActiveScripts.StartNewScript(Script);
+		
+		/*runningScript rscript(Script);
+		while (true)
+		{
+			if (rscript.isRunning)
+			{
+				rscript.Run();
+				WAIT(0);
+			}
+		}*/
+		while (true)
+		{
+			ActiveScripts.Run();
+			WAIT(0);
+		}
+	}
+	else
 	{
 		if (Script.ExitReason.length() > 1)
 			Log("Main: " + Script.ExitReason);
 		else
 			Log("Main: Unknown error prevented script from starting");
-	}
-	else
-	{
-		Log("Main: Script started");
-	}
-	while (true)
-	{
-		if (Script.isRunning)
+		while (true)
 		{
-			Script.OnTick();
-			if (!Script.isRunning)
-				Log(Script.ExitReason);
-		}
-		else
 			GRAPHICS::DRAW_RECT(0.5, 0.5, 0.5, 0.5, 0, 0, 255, 255);
-		WAIT(0);
+			WAIT(0);
+		}
 	}
+	
 }
 
 
